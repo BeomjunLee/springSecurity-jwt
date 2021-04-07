@@ -1,0 +1,7 @@
+jwt:
+  header: Authorization
+  secretKey : leebeomjun
+  #1h
+  accessToken-valid-seconds : 3600
+  #24h
+  refreshToken-valid-seconds : 86400
