@@ -31,6 +31,25 @@ Content-Type: application/json
 
 <br>
 
+## Login 실패 응답
+```json
+POST http://localhost:8080/api/login
+
+HTTP/1.1 400 
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Thu, 08 Apr 2021 21:01:51 GMT
+Connection: close
+
+{
+  "status": 400,
+  "message": "로그인 실패"
+}
+
+```
+
+<br>
+
 ### Login 응답
 ```json
 POST http://localhost:8080/api/login
