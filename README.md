@@ -95,6 +95,8 @@ Connection: keep-alive
 }
 ```
 
+<br>
+
 ### AccessToken 재발급 요청
 ```json
 POST http://localhost:8080/api/refreshToken
