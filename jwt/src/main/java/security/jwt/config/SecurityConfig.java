@@ -69,6 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 //필터 무시
-                .ignoring().antMatchers("/api/login");
+                .ignoring().antMatchers("/api/login", "/api/refreshToken");
     }
 }

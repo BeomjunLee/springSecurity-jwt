@@ -60,7 +60,7 @@ public class MemberService implements UserDetailsService {
      * @throws UsernameNotFoundException
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username){
         log.info("로그인 요청 회원 찾기");
         Member member = memberRepository.findMemberByUsernameFetch(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
@@ -97,6 +97,7 @@ public class MemberService implements UserDetailsService {
 
         Member member = memberRepository.findMemberByUsernameAndRefreshToken(authentication.getName(), refreshTokenDto.getRefreshToken())
                 .orElseThrow(() -> new InvalidRefreshTokenException("유효하지 않은 리프레시 토큰입니다"));
+        //TODO InvalidRefreshTokenException 예외 Handler
 
         //jwt accessToken & refreshToken 발급
         String accessToken = jwtProvider.generateToken(authentication, false);

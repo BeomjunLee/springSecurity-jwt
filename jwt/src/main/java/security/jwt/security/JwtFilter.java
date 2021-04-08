@@ -84,10 +84,10 @@ public class JwtFilter extends OncePerRequestFilter {
      */
     private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
         response.setCharacterEncoding("utf-8");
-        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(objectMapper.writeValueAsString(Response.builder()
-                .status(HttpStatus.FORBIDDEN.value())
+                .status(HttpStatus.UNAUTHORIZED.value())
                 .message(message)
                 .build()));
     }

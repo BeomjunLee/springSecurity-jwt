@@ -98,7 +98,7 @@ public class MemberController {
      * 테스트
      * @return
      */
-    @PreAuthorize("hasRole('ROLE_USERS')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/test")
     public ResponseEntity test() {
         Response response = Response.builder()
