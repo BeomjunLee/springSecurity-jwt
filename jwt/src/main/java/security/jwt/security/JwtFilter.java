@@ -13,13 +13,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import security.jwt.dto.response.LoginResponse;
 import security.jwt.dto.response.Response;
+import security.jwt.exception.TokenNotFoundException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -28,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final Logger log = LoggerFactory.getLogger(JwtFilter.class);
     private final JwtProvider jwtProvider;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -44,8 +48,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 log.info("jwt 토큰을 찾을수 없습니다");
+                throw new TokenNotFoundException("토큰을 찾을 수 없습니다");
             }
             filterChain.doFilter(request, response);
+
+        } catch (TokenNotFoundException e) {
+            sendErrorResponse(response, "토큰을 찾을 수 없습니다");
         } catch (MalformedJwtException e) {
             sendErrorResponse(response, "손상된 토큰입니다");
         } catch (ExpiredJwtException e) {
@@ -76,13 +84,32 @@ public class JwtFilter extends OncePerRequestFilter {
      * @throws IOException
      */
     private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(objectMapper.writeValueAsString(Response.builder()
                 .status(HttpStatus.FORBIDDEN.value())
                 .message(message)
+                .build()));
+    }
+
+    /**
+     * accessToken 재발급 응답
+     * @param response
+     * @param message
+     * @throws IOException
+     */
+    private void sendAccessTokenAndRefreshToken(HttpServletResponse response, String message, String accessToken, String refreshToken) throws IOException {
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(message)
+                .accessToken(accessToken)
+                .expiredAt(LocalDateTime.now().plusSeconds(jwtProvider.getAccessTokenValidMilliSeconds()/1000))
+                .refreshToken(refreshToken)
+                .issuedAt(LocalDateTime.now())
                 .build()));
     }
 

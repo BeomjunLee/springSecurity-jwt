@@ -2,6 +2,7 @@ package security.jwt.controller;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,12 +11,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import security.jwt.domain.Member;
 import security.jwt.domain.MemberForm;
 import security.jwt.dto.LoginDto;
+import security.jwt.dto.RefreshTokenDto;
 import security.jwt.dto.response.LoginResponse;
 import security.jwt.dto.response.Response;
 import security.jwt.security.JwtProvider;
 import security.jwt.service.MemberService;
+
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/api")
@@ -58,14 +63,33 @@ public class MemberController {
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         log.info(authentication + " 로그인 처리 authentication");
 
-        //jwt 생성
-        String jwt = jwtProvider.generateToken(authentication, false);
-        
+        //jwt accessToken & refreshToken 발급
+        String accessToken = jwtProvider.generateToken(authentication, false);
+        String refreshToken = jwtProvider.generateToken(authentication, true);
+
+        //회원 DB에 refreshToken 저장
+        Member member = memberService.findMember(authentication.getName());
+        member.updateRefreshToken(refreshToken);
+
         LoginResponse response = LoginResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("로그인 성공")
-                .accessToken(jwt)
+                .accessToken(accessToken)
+                .expiredAt(LocalDateTime.now().plusSeconds(jwtProvider.getAccessTokenValidMilliSeconds()/1000))
+                .refreshToken(refreshToken)
+                .issuedAt(LocalDateTime.now())
                 .build();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * refreshToken 으로 accessToken 재발급
+     * @param refreshTokenDto
+     * @return
+     */
+    @PostMapping("/refreshToken")
+    public ResponseEntity refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+        LoginResponse response = memberService.refreshToken(refreshTokenDto);
         return ResponseEntity.ok(response);
     }
 

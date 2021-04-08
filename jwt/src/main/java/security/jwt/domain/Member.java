@@ -33,5 +33,10 @@ public class Member {
         this.name = name;
         this.roles = roles;
     }
+
+    //refreshToken 갱신
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
 
