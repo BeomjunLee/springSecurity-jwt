@@ -5,10 +5,10 @@ version1은 너무 복잡해 최적화 하였습니다.
 <img src="https://user-images.githubusercontent.com/69130921/114068215-a4ca2080-98d8-11eb-9bad-b8642a56fa01.png">
 
 ### JWT 예외처리
-https://blog.naver.com/qjawnswkd/222303565093<br>
+https://blog.naver.com/qjawnswkd/222303565093<br><br>
 
 ### Security 예외처리(AuthenticationEntryPoint, AccessDeniedHandler)
-https://blog.naver.com/qjawnswkd/222303477758<br>
+https://blog.naver.com/qjawnswkd/222303477758<br><br>
 
 ### AccessToken만 이용했을 경우
 - AccessToken의 유효시간을 길게 설정하면 사용자는 자주 로그인을 할 필요가 없어서 편하겠지만 유효시간이 긴 만큼 악성사용자가 AccessToken을 탈취할수 있어 보안성이 떨어지게 됩니다<br><br>
