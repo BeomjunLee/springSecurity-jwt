@@ -21,4 +21,23 @@ https://blog.naver.com/qjawnswkd/222303477758<br><br>
 
 - AccessToken의 유효시간이 짧아지므로 AccessToken이 탈취당해도 정보를 취득하는데 시간이 줄어들어서 보안성이 높아집니다<br>
 
+### Response
+```json
+POST http://localhost:8080/api/login
 
+HTTP/1.1 200 
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Thu, 08 Apr 2021 20:27:11 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "status": 200,
+  "message": "로그인 성공",
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYxNzkxNDIzMX0.t83jPVJzIcjgRSIlV_OYIMMiixhwzrUmo9JZeg1yKPg",
+  "expiredAt": "2021-04-09T05:37:11.114702",
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYxODAwMDAzMX0.XcRGzfpR6k0m-XcyvKOFJV6Q8XNpZwSpoOoo9h54U-g",
+  "issuedAt": "2021-04-09T05:27:11.114735"
+}
+```
