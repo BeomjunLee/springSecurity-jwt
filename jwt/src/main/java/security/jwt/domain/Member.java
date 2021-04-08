@@ -1,12 +1,9 @@
 package security.jwt.domain;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,6 +15,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(unique = true)
     private String username;
     private String password;
     private String name;
@@ -25,6 +23,8 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<MemberRole> roles;
+
+    private String refreshToken;
 
     @Builder
     public Member(String username, String password, String name, Set<MemberRole> roles) {

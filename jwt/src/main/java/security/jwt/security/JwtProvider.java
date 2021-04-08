@@ -2,11 +2,9 @@ package security.jwt.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -79,56 +77,11 @@ public class JwtProvider{
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
 
-        String[] roles = claims.get("ROLE_").toString().split(",");
+        String[] roles = claims.get("roles").toString().split(",");
         List<SimpleGrantedAuthority> authorities = Arrays.stream(roles).map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
 
         return new UsernamePasswordAuthenticationToken(claims.getSubject(), "", authorities);
     }
 
-    /**
-     * jwt 검증
-     * @param response
-     * @param token
-     * @return
-     * @throws IOException
-     */
-    public boolean validateToken(HttpServletResponse response, String token) throws IOException {
-        try{
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            sendErrorResponse(response, "손상된 토큰입니다");
-        } catch (ExpiredJwtException e) {
-            sendErrorResponse(response, "만료된 토큰입니다");
-        } catch (UnsupportedJwtException e) {
-            sendErrorResponse(response, "유효하지 않은 토큰입니다");
-        } catch (IllegalArgumentException e) {
-            sendErrorResponse(response, "IllegalArgumentException");
-        }
-        return false;
-    }
 
-
-    /**
-     * json 응답
-     * @param response
-     * @param message
-     * @throws IOException
-     */
-    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.builder()
-                .status(HttpStatus.FORBIDDEN.value())
-                .message(message)
-                .build()));
-    }
-
-    @Data
-    @Builder
-    static class ErrorResponse{
-        private int status;
-        private String message;
-    }
 }

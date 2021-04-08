@@ -1,5 +1,4 @@
 package security.jwt.controller;
-
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import security.jwt.domain.MemberForm;
@@ -18,8 +16,6 @@ import security.jwt.dto.response.LoginResponse;
 import security.jwt.dto.response.Response;
 import security.jwt.security.JwtProvider;
 import security.jwt.service.MemberService;
-
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/api")
@@ -31,6 +27,11 @@ public class MemberController {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * 회원 가입
+     * @param form
+     * @return
+     */
     @PostMapping("/members")
     @ResponseStatus(HttpStatus.CREATED)
     public Response signUp(MemberForm form) {
@@ -42,6 +43,11 @@ public class MemberController {
                     .message("회원 가입 성공").build();
     }
 
+    /**
+     * 로그인
+     * @param loginDto
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginDto loginDto) {
 
@@ -63,6 +69,10 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 테스트
+     * @return
+     */
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/test")
     public ResponseEntity test() {
