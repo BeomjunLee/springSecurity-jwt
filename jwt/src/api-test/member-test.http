@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{"username":"test", "password":"1234"}
+
+###
+GET http://localhost:8080/api/test
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiUk9MRV8iOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYxNzg5MDY0OH0.eIZfYdMfAVKOd4nMXrJSGXIYJdZKDm07fDQGOiGtgK4
+
