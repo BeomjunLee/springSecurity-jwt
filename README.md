@@ -21,7 +21,17 @@ https://blog.naver.com/qjawnswkd/222303477758<br><br>
 
 - AccessToken의 유효시간이 짧아지므로 AccessToken이 탈취당해도 정보를 취득하는데 시간이 줄어들어서 보안성이 높아집니다<br><br>
 
-### Login Response
+### Login 요청
+```json
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{"username":"test", "password":"1234"}
+```
+
+<br>
+
+### Login 응답
 ```json
 POST http://localhost:8080/api/login
 
@@ -44,7 +54,58 @@ Connection: keep-alive
 
 <br>
 
-### AccessToken 재발급 (grantType:refreshToken, refreshToken:{refreshToken} post 요청)
+### Token 예외 응답
+```json
+HTTP/1.1 403 
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json;charset=utf-8
+Content-Length: 52
+Date: Thu, 08 Apr 2021 20:36:08 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "status": 403,
+  "message": "토큰을 찾을 수 없습니다"
+}
+
+{
+  "status": 403,
+  "message": "손상된 토큰입니다"
+}
+
+{
+  "status": 403,
+  "message": "만료된 토큰입니다"
+}
+
+{
+  "status": 403,
+  "message": "지원하지 않는 토큰입니다"
+}
+
+{
+  "status": 403,
+  "message": "시그니처 검증에 실패한 토큰입니다"
+}
+```
+
+### AccessToken 재발급 요청
+```json
+POST http://localhost:8080/api/refreshToken
+Content-Type: application/json
+
+{"grantType":"refreshToken", "refreshToken":"refreshToken 값"}
+```
+
+<br>
+
+### AccessToken 재발급 응답
 ```json
 POST http://localhost:8080/api/refreshToken
 
