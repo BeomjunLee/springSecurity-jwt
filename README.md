@@ -56,7 +56,7 @@ Connection: keep-alive
 
 ### Token 예외 응답
 ```json
-HTTP/1.1 403 
+HTTP/1.1 401 
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -70,27 +70,27 @@ Keep-Alive: timeout=60
 Connection: keep-alive
 
 {
-  "status": 403,
+  "status": 401,
   "message": "토큰을 찾을 수 없습니다"
 }
 
 {
-  "status": 403,
+  "status": 401,
   "message": "손상된 토큰입니다"
 }
 
 {
-  "status": 403,
+  "status": 401,
   "message": "만료된 토큰입니다"
 }
 
 {
-  "status": 403,
+  "status": 401,
   "message": "지원하지 않는 토큰입니다"
 }
 
 {
-  "status": 403,
+  "status": 401,
   "message": "시그니처 검증에 실패한 토큰입니다"
 }
 ```
