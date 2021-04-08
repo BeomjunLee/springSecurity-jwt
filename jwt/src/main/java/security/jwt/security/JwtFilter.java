@@ -39,17 +39,16 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = resolveToken(request);
             log.info(token + " 추출 완료");
 
-            if (StringUtils.hasText(token)) {
-                //jwt 에서 추출된 데이터가 들어있는 Authentication
-                Authentication authentication = jwtProvider.getAuthentication(token);
-                log.info(authentication + " Authentication 생성");
-
-                //SecurityContextHolder 에 Authentication 를 세팅하기 때문에 @PreAuthorize 로 권한 파악가능
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
+            if (!StringUtils.hasText(token)) {
                 log.info("jwt 토큰을 찾을수 없습니다");
                 throw new TokenNotFoundException("토큰을 찾을 수 없습니다");
             }
+            //jwt 에서 추출된 데이터가 들어있는 Authentication
+            Authentication authentication = jwtProvider.getAuthentication(token);
+            log.info(authentication + " Authentication 생성");
+
+            //SecurityContextHolder 에 Authentication 를 세팅하기 때문에 @PreAuthorize 로 권한 파악가능
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
 
         } catch (TokenNotFoundException e) {

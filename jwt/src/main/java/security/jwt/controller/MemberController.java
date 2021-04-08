@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import security.jwt.dto.LoginDto;
 import security.jwt.dto.RefreshTokenDto;
 import security.jwt.dto.response.LoginResponse;
 import security.jwt.dto.response.Response;
+import security.jwt.security.JwtFilter;
 import security.jwt.security.JwtProvider;
 import security.jwt.service.MemberService;
 
@@ -68,8 +70,7 @@ public class MemberController {
         String refreshToken = jwtProvider.generateToken(authentication, true);
 
         //회원 DB에 refreshToken 저장
-        Member member = memberService.findMember(authentication.getName());
-        member.updateRefreshToken(refreshToken);
+       memberService.findMemberAndSaveRefreshToken(authentication.getName(), refreshToken);
 
         LoginResponse response = LoginResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -97,7 +98,7 @@ public class MemberController {
      * 테스트
      * @return
      */
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USERS')")
     @GetMapping("/test")
     public ResponseEntity test() {
         Response response = Response.builder()

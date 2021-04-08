@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import security.jwt.domain.MemberRole;
 import security.jwt.domain.Member;
 import security.jwt.domain.MemberForm;
@@ -40,6 +41,7 @@ public class MemberService implements UserDetailsService {
      * 회원 가입
      * @param form
      */
+    @Transactional
     public void signUp(MemberForm form) {
         Member member = Member.builder()
                 .username(form.getUsername())
@@ -60,7 +62,7 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("로그인 요청 회원 찾기");
-        Member member = memberRepository.findMemberByUsername(username)
+        Member member = memberRepository.findMemberByUsernameFetch(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
 
         return new User(member.getUsername(), member.getPassword(), authorities(member.getRoles()));
@@ -71,31 +73,37 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * 회원 찾기
+     * 회원에게 refreshToken 저장
      * @param username
      * @return
      */
-    public Member findMember(String username) {
-        return memberRepository.findMemberByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
+    @Transactional
+    public void findMemberAndSaveRefreshToken(String username, String refreshToken) {
+        Member member = memberRepository.findMemberByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
+        member.updateRefreshToken(refreshToken);
     }
 
     /**
-     *
+     * refreshToken 으로 accessToken 재발급
      * @param refreshTokenDto
      * @return
      */
+    @Transactional
     public LoginResponse refreshToken(RefreshTokenDto refreshTokenDto) {
         if (!refreshTokenDto.getGrantType().equals("refreshToken"))
             throw new RefreshTokenGrantTypeException("올바른 grantType 을 입력해주세요");
 
         Authentication authentication = jwtProvider.getAuthentication(refreshTokenDto.getRefreshToken());
 
-        memberRepository.findMemberByUsernameAndRefreshToken(authentication.getName(), refreshTokenDto.getRefreshToken())
+        Member member = memberRepository.findMemberByUsernameAndRefreshToken(authentication.getName(), refreshTokenDto.getRefreshToken())
                 .orElseThrow(() -> new InvalidRefreshTokenException("유효하지 않은 리프레시 토큰입니다"));
 
         //jwt accessToken & refreshToken 발급
         String accessToken = jwtProvider.generateToken(authentication, false);
         String refreshToken = jwtProvider.generateToken(authentication, true);
+
+        //refreshToken 저장 (refreshToken 은 한번 사용후 폐기)
+        member.updateRefreshToken(refreshToken);
 
         LoginResponse response = LoginResponse.builder()
                 .status(HttpStatus.OK.value())
