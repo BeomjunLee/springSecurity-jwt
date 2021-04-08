@@ -10,10 +10,6 @@ https://blog.naver.com/qjawnswkd/222303565093<br>
 ### Security 예외처리(AuthenticationEntryPoint, AccessDeniedHandler)
 https://blog.naver.com/qjawnswkd/222303477758<br>
 
-### JWT RefreshToken
-:low_brightness:<strong>RefreshToken로직 추가</strong>:low_brightness:<br><br>
-
-
 ### AccessToken만 이용했을 경우
 - AccessToken의 유효시간을 길게 설정하면 사용자는 자주 로그인을 할 필요가 없어서 편하겠지만 유효시간이 긴 만큼 악성사용자가 AccessToken을 탈취할수 있어 보안성이 떨어지게 됩니다<br><br>
 - 반대로 AccessToken의 유효시간을 짧게 설정하면 보안성은 높아지나 사용자가 로그인을 자주 해야해서 편의성이 떨어지게 됩니다<br><br>
