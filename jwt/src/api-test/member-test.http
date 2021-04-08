@@ -1,7 +1,7 @@
 POST http://localhost:8080/api/login
 Content-Type: application/json
 
-{"username":"tedst", "password":"1234"}
+{"username":"test", "password":"1234"}
 
 ###
 GET http://localhost:8080/api/test
