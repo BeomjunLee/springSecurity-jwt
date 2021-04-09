@@ -122,7 +122,7 @@ Connection: keep-alive
 
 <br>
 
-### AccessToken 재발급 요청
+### refreshToken을 이용한 accessToken 재발급 요청
 ```json
 POST http://localhost:8080/api/refreshToken
 Content-Type: application/json
@@ -132,7 +132,7 @@ Content-Type: application/json
 
 <br>
 
-### AccessToken 재발급 응답
+### refreshToken을 이용한 accessToken 재발급 응답
 ```json
 POST http://localhost:8080/api/refreshToken
 
