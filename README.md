@@ -1,7 +1,7 @@
 ## SpringSecurity-JWT-VERSION2 (AccessToken & RefreshToken)
 version1 은 너무 복잡해 최적화 하였습니다.
 
-### 흐름
+### accessToken refreshToken 흐름
 <img src="https://user-images.githubusercontent.com/69130921/114068215-a4ca2080-98d8-11eb-9bad-b8642a56fa01.png"><br><br>
 
 ### 로그인 처리 흐름
