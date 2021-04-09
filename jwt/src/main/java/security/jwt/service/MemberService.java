@@ -39,7 +39,7 @@ public class MemberService implements UserDetailsService {
 
     /**
      * 회원 가입
-     * @param form
+     * @param form 회원가입 form
      */
     @Transactional
     public void signUp(MemberForm form) {
@@ -55,8 +55,8 @@ public class MemberService implements UserDetailsService {
 
     /**
      * 로그인 요청 회원 찾기
-     * @param username
-     * @return
+     * @param username 요청 아이디
+     * @return 회원 정보 넣은 security User 객체
      * @throws UsernameNotFoundException
      */
     @Override
@@ -69,24 +69,27 @@ public class MemberService implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> authorities(Set<MemberRole> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toList());
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .collect(Collectors.toList());
     }
 
     /**
      * 회원에게 refreshToken 저장
-     * @param username
-     * @return
+     * @param username 요청 아이디
+     * @param refreshToken refreshToken 값
      */
     @Transactional
     public void findMemberAndSaveRefreshToken(String username, String refreshToken) {
-        Member member = memberRepository.findMemberByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
+        Member member = memberRepository.findMemberByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
         member.updateRefreshToken(refreshToken);
     }
 
     /**
      * refreshToken 으로 accessToken 재발급
-     * @param refreshTokenDto
-     * @return
+     * @param refreshTokenDto accessToken 재발급 요청 dto
+     * @return json response
      */
     @Transactional
     public LoginResponse refreshToken(RefreshTokenDto refreshTokenDto) {

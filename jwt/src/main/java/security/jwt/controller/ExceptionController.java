@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import security.jwt.dto.response.Response;
+import security.jwt.exception.ExpiredJwtException;
 import security.jwt.exception.InvalidRefreshTokenException;
 
 
@@ -31,4 +32,5 @@ public class ExceptionController {
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+
 }

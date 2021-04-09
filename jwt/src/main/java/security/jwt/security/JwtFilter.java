@@ -66,8 +66,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     /**
      * 헤더 token 추출
-     * @param request
-     * @return
+     * @param request HttpServletRequest
+     * @return 헤더 토큰 추출 값
      */
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -78,8 +78,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     /**
      * jwt 예외처리 응답
-     * @param response
-     * @param message
+     * @param response HttpServletResponse
+     * @param message 응답 메세지
      * @throws IOException
      */
     private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
@@ -91,26 +91,4 @@ public class JwtFilter extends OncePerRequestFilter {
                 .message(message)
                 .build()));
     }
-
-    /**
-     * accessToken 재발급 응답
-     * @param response
-     * @param message
-     * @throws IOException
-     */
-    private void sendAccessTokenAndRefreshToken(HttpServletResponse response, String message, String accessToken, String refreshToken) throws IOException {
-        response.setCharacterEncoding("utf-8");
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(message)
-                .accessToken(accessToken)
-                .expiredAt(LocalDateTime.now().plusSeconds(jwtProvider.getAccessTokenValidMilliSeconds()/1000))
-                .refreshToken(refreshToken)
-                .issuedAt(LocalDateTime.now())
-                .build()));
-    }
-
-
 }

@@ -36,8 +36,8 @@ public class MemberController {
 
     /**
      * 회원 가입
-     * @param form
-     * @return
+     * @param form 회원가입 form
+     * @return json response
      */
     @PostMapping("/members")
     @ResponseStatus(HttpStatus.CREATED)
@@ -52,8 +52,8 @@ public class MemberController {
 
     /**
      * 로그인
-     * @param loginDto
-     * @return
+     * @param loginDto 로그인 요청 dto
+     * @return json response
      */
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginDto loginDto) {
@@ -85,8 +85,8 @@ public class MemberController {
 
     /**
      * refreshToken 으로 accessToken 재발급
-     * @param refreshTokenDto
-     * @return
+     * @param refreshTokenDto accessToken 재발급 요청 dto
+     * @return json response
      */
     @PostMapping("/refreshToken")
     public ResponseEntity refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
@@ -96,7 +96,7 @@ public class MemberController {
 
     /**
      * 테스트
-     * @return
+     * @return json response
      */
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/test")

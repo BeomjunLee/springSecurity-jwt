@@ -1,21 +1,13 @@
 package security.jwt.security;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Date;
@@ -50,8 +42,8 @@ public class JwtProvider{
     /**
      * jwt 생성
      * @param authentication UserDetailsService 에서 인증 성공된 User 의 값들이 담긴 객체
-     * @param isRefreshToken
-     * @return
+     * @param isRefreshToken accessToken refreshToken 구분
+     * @return 생성된 토큰
      */
     public String generateToken(Authentication authentication, boolean isRefreshToken) {
         String authorities = authentication.getAuthorities().stream()
@@ -73,8 +65,8 @@ public class JwtProvider{
 
     /**
      * jwt 추출 데이터 Authentication 에 넣기
-     * @param token
-     * @return
+     * @param token 받은 토큰
+     * @return 회원 정보 담긴 Authentication
      */
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
@@ -84,6 +76,4 @@ public class JwtProvider{
 
         return new UsernamePasswordAuthenticationToken(claims.getSubject(), "", authorities);
     }
-
-
 }
