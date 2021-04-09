@@ -7,7 +7,7 @@ version1 은 너무 복잡해 최적화 하였습니다.
 ### Security 로그인 처리 흐름
 <img src="https://user-images.githubusercontent.com/69130921/114241552-47ab9900-99c4-11eb-8ccb-69765c8e0173.png"><br><br>
 
-### 상세 설명 블로그 포스팅 보러가기
+### :star2:상세 설명 블로그 포스팅 보러가기:star2:
 https://blog.naver.com/qjawnswkd/222304836903<br><br>
 
 ### JWT 예외처리
